@@ -1,0 +1,344 @@
+from django.shortcuts import render,render_to_response
+from django import forms
+from django.http import HttpResponse,HttpResponseRedirect
+from django.template.loader import * 
+from django.template import Context
+from models import Paper,User,Pbpaper
+
+class UserForm(forms.Form):
+    File = forms.FileField()
+    
+def index(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    c=Context({"a":a})
+    return render_to_response("index.html",c)
+
+def reference(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    paper_list=Paper.objects.all()
+    c=Context({"paper_list":paper_list})
+    return render_to_response("reference.html",c,d)
+    
+def publish(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        paper_list=Pbpaper.objects.all()
+        c=Context({"paper_list":paper_list})
+        return render_to_response("publish.html",c,d)
+        
+def search(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    DouB=request.GET['searchname']
+    DouA=request.GET['select']
+    if DouA=="Title":
+        paper_list=Paper.objects.filter(Title__contains=DouB)
+    if DouA=="Author":
+        paper_list=Paper.objects.filter(Author__contains=DouB)
+    if DouA=="Keyword":
+        paper_list=Paper.objects.filter(Keyword__contains=DouB)
+    if DouA=="Publisher":
+        paper_list=Paper.objects.filter(Publisher__contains=DouB)
+    if DouA=="Publishdate":
+        paper_list=Paper.objects.filter(PublishDate=DouB)
+    c=Context({"paper_list":paper_list})
+    return render_to_response("reference.html",c,d)
+
+def searchclass(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    DouB=request.GET['grade']
+    paper_list=Paper.objects.filter(Grade3=DouB)
+    c=Context({"paper_list":paper_list})
+    return render_to_response("reference.html",c,d)
+
+def pbsearch(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        DouB=request.GET['searchname']
+        DouA=request.GET['select']
+        if DouA=="Title":
+            paper_list=Pbpaper.objects.filter(Title__contains=DouB)
+        if DouA=="Author":
+            paper_list=Pbpaper.objects.filter(Author__contains=DouB)
+        if DouA=="Keyword":
+            paper_list=Pbpaper.objects.filter(Keyword__contains=DouB)
+        if DouA=="Publisher":
+            paper_list=Pbpaper.objects.filter(Publisher__contains=DouB)
+        if DouA=="Publishdate":
+            paper_list=Pbpaper.objects.filter(PublishDate=DouB)
+        c=Context({"paper_list":paper_list})
+        return render_to_response("publish.html",c,d)
+
+def pbsearchclass(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        DouB=request.GET['grade']
+        paper_list=Pbpaper.objects.filter(Grade3=DouB)
+        c=Context({"paper_list":paper_list})
+        return render_to_response("publish.html",c,d)
+
+def add(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    if request.POST:
+        post=request.POST
+        form = UserForm(request.POST,request.FILES)
+        new_paper=Paper()
+        new_paper.PaperID=post["PaperID"]
+        new_paper.Title=post["Title"]
+        new_paper.Author=post["Author"]
+        new_paper.Keyword=post["Keyword"]
+        new_paper.Publisher=post["Publisher"]
+        new_paper.PublishDate=post["Publishdate"]
+        new_paper.Summary=post["Summary"]
+        new_paper.Grade1=post["grade1"]
+        new_paper.Grade2=post["grade2"]
+        new_paper.Grade3=post["grade3"]
+        if form.is_valid():
+            File=form.cleaned_data['File']
+            new_paper.File=File
+            new_paper.save()
+            return HttpResponseRedirect('/reference/') 
+    else:
+        form = UserForm()
+    return render_to_response('add.html', {'form': form}, d)
+    
+def pbadd(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        if request.POST:
+            post=request.POST
+            form = UserForm(request.POST,request.FILES)
+            new_paper=Pbpaper()
+            new_paper.PaperID=post["PaperID"]
+            new_paper.Title=post["Title"]
+            new_paper.Author=post["Author"]
+            new_paper.Keyword=post["Keyword"]
+            new_paper.Publisher=post["Publisher"]
+            new_paper.PublishDate=post["Publishdate"]
+            new_paper.Summary=post["Summary"]
+            new_paper.Grade1=post["grade1"]
+            new_paper.Grade2=post["grade2"]
+            new_paper.Grade3=post["grade3"]
+            if form.is_valid():
+                File=form.cleaned_data['File']
+                new_paper.File=File
+                new_paper.save()
+                return HttpResponseRedirect('/publish/') 
+        else:
+            form = UserForm()
+        return render_to_response('add.html', {'form': form}, d)
+
+def more(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    more_id =request.GET["id"]
+    paper=Paper.objects.get(PaperID=more_id)
+    c = Context({"paper":paper}) 
+    return render_to_response("information.html",c,d)  
+
+def delete(request):
+    paperid = request.GET["id"]
+    Paper.objects.get(PaperID=paperid).delete()
+    return HttpResponseRedirect("/reference/")
+
+def modify(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    paperid = request.GET["id"]
+    old = Paper.objects.get(PaperID=paperid)
+    if request.POST:
+        post = request.POST
+        old.Title=post['Title']
+        old.Author=post['Author']
+        old.Keyword=post['Keyword']
+        old.Publisher=post['Publisher']
+        old.PublishDate=post['Publishdate']
+        old.Summary=post['Summary']
+        old.Grade1=post['grade1']
+        old.Grade2=post['grade2']
+        old.Grade3=post['grade3']
+        old.save()
+        return HttpResponseRedirect('/reference/')
+    c=Context({"paper":old})
+    return render_to_response("modify.html",c,d)
+
+def pbmore(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        more_id =request.GET["id"]
+        paper=Pbpaper.objects.get(PaperID=more_id)
+        c = Context({"paper":paper}) 
+        return render_to_response("pbinformation.html",c,d)  
+
+def pbdelete(request):
+    paperid = request.GET["id"]
+    Pbpaper.objects.get(PaperID=paperid).delete()
+    return HttpResponseRedirect("/publish/")
+
+def pbmodify(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        paperid = request.GET["id"]
+        old = Pbpaper.objects.get(PaperID=paperid)
+        if request.POST:
+            post = request.POST
+            old.Title=post['Title']
+            old.Author=post['Author']
+            old.Keyword=post['Keyword']
+            old.Publisher=post['Publisher']
+            old.PublishDate=post['Publishdate']
+            old.Summary=post['Summary']
+            old.Grade1=post['grade1']
+            old.Grade2=post['grade2']
+            old.Grade3=post['grade3']
+            old.save()
+            return HttpResponseRedirect('/publish/')
+        c=Context({"paper":old})
+        return render_to_response("modify.html",c,d)
+
+def update(request):
+    if request.session.get('username')==None:
+        a=0
+    else:
+        a=1
+    d=Context({"a":a})
+    paperid = request.GET["id"]
+    old = Paper.objects.get(PaperID=paperid)
+    if request.FILES:
+        post = request.FILES
+        old.File=post['file']
+        old.save()
+        return HttpResponseRedirect('/reference/') 
+    return render_to_response('addfile.html',d)
+def pbupdate(request):
+    if request.session.get('username')==None:
+        a=0
+        return HttpResponseRedirect('/login/')
+    else:
+        a=1
+        d=Context({"a":a})
+        paperid = request.GET["id"]
+        old = Pbpaper.objects.get(PaperID=paperid)
+        if request.FILES:
+            post = request.FILES
+            old.File=post['file']
+            old.save()
+            return HttpResponseRedirect('/publish/') 
+        return render_to_response('addfile.html', d)
+
+def register(request):
+    a=0
+    if request.POST:
+        post = request.POST
+        users=User.objects.all()
+        for u in users:
+            if u.username==post['name']:
+                a=1
+                c=Context({"a":a})
+                return render_to_response("registered.html", c)
+        if a==0:
+            new_user=User()
+            new_user.username=post['name']
+            new_user.password=post['password1']
+            new_user.save()
+            return HttpResponseRedirect("/login/")
+    else:
+        return render_to_response("registered.html")
+        
+def login(request):
+    if request.POST:
+        x=0
+        post = request.POST
+        name = post['name']
+        word = post['password']
+        user=User.objects.get(username=name)
+        if user.password==word:
+           request.session['username']=name
+           request.session['password']=word
+           return HttpResponseRedirect("/home/")
+        else:
+           users=User.objects.all()
+           x=1
+           b=Context({"x":x})
+           c=Context({"users":users})
+           return render_to_response("login.html",b,c) 
+
+    else:
+        users=User.objects.all()
+        c=Context({"users":users})
+        return render_to_response("login.html",c) 
+
+def loginout(request):
+    del request.session['username']
+    del request.session['password']
+    return HttpResponseRedirect("/home/")
+
+def load(request):
+    paperid = request.GET["id"]
+    paper = Paper.objects.get(PaperID=paperid)
+    b = str(paper.File)[12:]
+    c=Context({"b":b})
+    return render_to_response("load.html",c) 
+
+def pbload(request):
+    paperid = request.GET["id"]
+    paper = Pbpaper.objects.get(PaperID=paperid)
+    b = str(paper.File)[12:]
+    c=Context({"b":b})
+    return render_to_response("load.html",c) 
+
+
+
+
+    
+
+
+
