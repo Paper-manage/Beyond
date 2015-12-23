@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by http://sc.chinaz.com
+Released for free under a Creative Commons Attribution 3.0 License
+-->
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>详细信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="{% static "style.css" %}" rel="stylesheet" type="text/css" />
+<!-- CuFon: Enables smooth pretty custom font rendering. 100% SEO friendly. To disable, remove this section -->
+<script type="text/javascript" src="js/cufon-yui.js"></script>
+<script type="text/javascript" src="js/arial.js"></script>
+<script type="text/javascript" src="js/cuf_run.js"></script>
+<!-- CuFon ends -->
+</head>
+<body>
+<div class="main">
+
+   <div class="header">
+    <div class="header_resize">
+     <div class="logo"><h1><a href="/home/">论文<span>管理</span> <small>欢迎进入论文管理系统！</small></a></h1></div>
+      <div class="menu_nav">
+        <ul>
+          <li><a href="/home/">主页</a></li>
+          <li><a href="/reference/">参考论文</a></li>
+          <li class="active"><a href="/publish/">发表论文</a></li>
+          {%ifequal a 0 %}<li><a href="/login/">登录&注册</a></li>
+          {%else%} <li><a href="/loginout/">退出登录</a></li> 
+          {%endifequal%} 
+        </ul>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content_resize">
+      <div class="mainbar">
+        <div class="article">
+          <h2>{{paper.Title}}</h2><div class="clr"></div>
+          <p>摘要：{{paper.Summary}}</p>
+          <p>关键词：{{paper.Keyword}}</p>
+        </div>
+        <div class="article">
+          <h2>其他信息</h2><div class="clr"></div>
+          <p>作者：{{paper.Author}}</p>
+          <p>分类：{{paper.Grade1}} - {{paper.Grade2}} - {{paper.Grade3}}</p>
+          <p>统一编号：{{paper.PaperID}}</p>
+          <p>发表刊物：{{paper.Publisher}}</p>
+          <p>发表日期：{{paper.PublishDate}}</p>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="gadget">
+          <h2 class="star">操作</h2><div class="clr"></div>
+          <ul class="sb_menu">
+            <li><a href="/pbload/?id={{paper.PaperID}}">下载该文档</a></li>
+            <li><a href="/pbupdate/?id={{paper.PaperID}}">重新上传文件</a></li>
+            <li><a href="/pbmodify/?id={{paper.PaperID}}">修改信息</a></li>
+            <li><a href="/pbdelete/?id={{paper.PaperID}}">删除该论文</a></li>
+          </ul>
+        </div>
+        
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  
+</div>
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div></body>
+</html>
