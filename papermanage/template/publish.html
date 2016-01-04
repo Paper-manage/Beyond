@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by http://sc.chinaz.com
+Released for free under a Creative Commons Attribution 3.0 License
+-->
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>论文管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="{% static "style.css" %}" rel="stylesheet" type="text/css" />
+<!-- CuFon: Enables smooth pretty custom font rendering. 100% SEO friendly. To disable, remove this section -->
+<!-- CuFon ends -->
+<script language = JavaScript>
+function showmenu(id) {
+	var list = document.getElementById("list"+id);
+	var menu = document.getElementById("menu"+id)
+	if (list.style.display=="none") {
+		document.getElementById("list"+id).style.display="block";
+		menu.className = "title1";
+	}else {
+		document.getElementById("list"+id).style.display="none";
+		menu.className = "title";
+	}
+} 
+</script>
+
+<script type="text/javascript" language="javascript">
+    function PrintTableToExcel(objTab)
+{
+  try 
+  {
+    var xls = new ActiveXObject( "Excel.Application" );
+  }
+  catch(e) 
+  {
+  alert(e)
+    //alert( "要打印该表，您必须安装Excel电子表格软件，同时浏览器须使用"ActiveX 控件"，您的浏览器须允许执行控件。 请点击【帮助】了解浏览器设置方法！");
+    return false;
+  }
+  xls.visible = true;
+  var xlBook = xls.Workbooks.Add;
+  var xlsheet = xlBook.Worksheets(1);
+  var x = 1;
+  var y = 1;
+  for (var i = 0; i < objTab.rows.length; i++)
+  {
+    y = 1;
+    for (var j = 0; j < objTab.rows[i].cells.length; j++)
+    {
+      xlsheet.Cells(x, y).Value = objTab.rows[i].cells[j].innerHTML;
+      xlsheet.Cells(x, y).Borders.LineStyle = 1;
+      y++;
+    }
+    x++;
+  }
+  xlsheet.Columns.AutoFit; //自动适应大小
+  return;
+}
+
+ 
+
+    </script>
+    
+<style type="text/css">
+h3 {
+	font-size: 12px;
+	color: #323a3f;
+}
+</style>
+
+</head>
+<body>
+<div class="main">
+
+   <div class="header">
+    <div class="header_resize">
+     <div class="logo"><h1><a href="/home/">论文<span>管理</span> <small>欢迎进入论文管理系统！</small></a></h1></div>
+      <div class="menu_nav">
+        <ul>
+          <li><a href="/home/">主页</a></li>
+          <li><a href="/reference/">参考论文</a></li>
+          <li class="active"><a href="/publish/">发表论文</a></li>
+          {%ifequal a 0 %}<li><a href="/login/">登录&注册</a></li>
+          {%else%} <li><a href="/personal/">{{a}}</a></li> 
+          <li><a href="/loginout/">退出登录</a></li> 
+          {%endifequal%}   
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content_resize">
+      <div class="mainbar">
+        <div class="article">
+          <h2>论文列表</h2><div class="clr"></div>
+          <p>您可以在右侧栏中查询已发表的论文，或者<span><a href="/pbadd/">发表自己的论文</a></span></p>
+          <form id="form1" runat="server">
+          <table id="Table1" width="600">
+          <tbody align="center" cellpadding="50%" style="font-size: 14px;
+	color: #323a3f; ">
+            <tr>
+              <td height="50">
+                编号
+              </td>
+              <td>
+                题目
+              </td>
+              <td>
+                作者
+              </td>
+              <td>
+                关键字
+              </td>
+              <td>
+                发表刊物
+              </td>
+              <td>
+                发表时间
+              </td>
+              <td>
+                分类
+              </td>
+            </tr>
+            {%for paper in paper_list%}
+            <tr>
+              <td height="40">
+                {{paper.PaperID}}
+               </td>
+              <td>
+                <a href="/pbmore/?id={{paper.PaperID}}">{{paper.Title}}</a>
+              </td>
+              <td>
+                {{paper.Author1}} {{paper.Author2}} {{paper.Author3}} {{paper.Author4}}
+              </td>
+              <td>
+                {{paper.Keyword}}
+              </td>
+              <td>
+                {{paper.Publisher}}
+              </td>
+              <td>
+                {{paper.PublishDate}}
+              </td>
+              <td>
+                {{paper.Grade3}}
+              </td>
+            </tr>
+            {%endfor%}
+            </tbody>
+          </table>
+          <p>&nbsp;</p>
+          <input id="Submit1" type="submit" value="导出excel" onclick="PrintTableToExcel(Table1)" />
+          </form>
+          <p>&nbsp;</p>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="searchform"> 
+        <form id="formsearch" name="formsearch" method="get" action="/pbsearch/">
+        <p><select name="select"> 
+        <option value="Title">论文题目</option> 
+        <option value="Author">作者</option> 
+        <option value="Keyword">关键字</option> 
+        <option value="Publisher">刊物</option> 
+        <option value="Publishdate">发表时间</option>   
+        </select></p>
+            <span><input name="searchname" class="editbox_search" id="editbox_search" maxlength="80" type="text" /></span>
+            <input name="button_search" src="{% static "search_btn.gif" %}" class="button_search" type="image" />
+          </form>
+        </div>
+        
+        <div class="gadget">
+          <h2>&nbsp;</h2>
+          <h2>&nbsp;</h2>
+          <a href="/authsearch/">作者关系查询</a>
+          <h2 class="star">分类</h2>
+
+          
+        <div id="nav">
+        
+		<div id="menu1" onclick="showmenu('1') ">理学</div>
+		<div id="list1" class="content" style="display:none">
+		    <ul>
+            
+			<li><div id="menu11" onclick="showmenu('11') ">数学类</div>
+			<div id="list11" class="content" style="display:none">
+                <ul>
+                <li><a href="/pbsearchclass/?grade=数学与应用数学">数学与应用数学</a></li>
+                <li><a href="/pbsearchclass/?grade=信息与计算科学">信息与计算科学</a></li>
+                </ul></div>
+              </li>
+            
+			<li><div id="menu12" onclick="showmenu('12') ">物理学类</div>
+			<div id="list12" class="content" style="display:none">
+            	<ul>
+                <li><a href="/pbsearchclass/?grade=物理学">物理学</a></li>
+                <li><a href="/pbsearchclass/?grade=应用物理学">应用物理学</a></li>
+                <li><a href="/pbsearchclass/?grade=核物理">核物理</a></li>
+                </ul></div>
+              </li>
+            
+			</ul></div>
+        	
+		<div id="menu2" onclick="showmenu('2')">工学</div>
+		<div id="list2" class="content" style="display:none">
+			<ul>
+            
+            <li><div id="menu21" onclick="showmenu('21') ">力学类</div>
+			<div id="list21" class="content" style="display:none">
+                <ul>
+                <li><a href="/pbsearchclass/?grade=理论与应用力学">理论与应用力学</a></li>
+                <li><a href="/pbsearchclass/?grade=工程力学">工程力学</a></li>
+                </ul></div>
+              </li>
+            
+			<li><div id="menu22" onclick="showmenu('22') ">机械类</div>
+			<div id="list22" class="content" style="display:none">
+            	<ul>
+                <li><a href="/pbsearchclass/?grade=机械工程">机械工程</a></li>
+                <li><a href="/pbsearchclass/?grade=机械设计制造及其自动化">机械设计制造及其自动化</a></li>
+                <li><a href="/pbsearchclass/?grade=材料成型及控制工程">材料成型及控制工程</a></li>
+                </ul></div>
+              </li>
+            
+			</ul></div>	
+        
+        <div id="menu3" onclick="showmenu('3')">文学</div>
+		<div id="list3" class="content" style="display:none">
+			<ul>
+			
+            <li><div id="menu31" onclick="showmenu('31') ">中国语言文学类</div>
+			<div id="list31" class="content" style="display:none">
+                <ul>
+                <li><a href="/pbsearchclass/?grade=汉语言文学">汉语言文学</a></li>
+                <li><a href="/pbsearchclass/?grade=汉语言">汉语言</a></li>
+                <li><a href="/pbsearchclass/?grade=汉语国际教育">汉语国际教育</a></li>
+                </ul></div>
+              </li>
+            
+			<li><div id="menu32" onclick="showmenu('32') ">外国语言文学类</div>
+			<div id="list32" class="content" style="display:none">
+            	<ul>
+                <li><a href="/pbsearchclass/?grade=英语">英语</a></li>
+                <li><a href="/pbsearchclass/?grade=俄语">俄语</a></li>
+                </ul></div>
+              </li>
+            
+			</ul></div>	
+         
+        </div>
+        
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+
+</div>
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div></body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by http://sc.chinaz.com
+Released for free under a Creative Commons Attribution 3.0 License
+-->
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>欢迎进入论文管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="{% static "style.css" %}" rel="stylesheet" type="text/css" />
+<!-- CuFon: Enables smooth pretty custom font rendering. 100% SEO friendly. To disable, remove this section -->
+
+<!-- CuFon ends -->
+</head>
+<body>
+<div class="main">
+
+  <div class="header">
+    <div class="header_resize">
+     <div class="logo"><h1><a href="/home/">论文<span>管理</span> <small>欢迎进入论文管理系统！</small></a></h1></div>
+      <div class="menu_nav">
+        <ul>
+          <li class="active"><a href="/home/">主页</a></li>
+          <li><a href="/reference/">参考论文</a></li>
+          <li><a href="/publish/">发表论文</a></li>
+          {%ifequal a 0 %}<li><a href="/login/">登录&注册</a></li>
+          {%else%} <li><a href="/personal/">{{a}}</a></li> 
+          <li><a href="/loginout/">退出登录</a></li> 
+          {%endifequal%}          
+        </ul>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+	<p></p>
+  <div class="content">
+    <div class="content_resize">
+      <div align="center">
+          <a href="/reference/"><input type="image" src="{% static "Reference.gif" %}" /></a>
+          <a href="/publish/"><input type="image" src="{% static "Publish.gif" %}" /></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div></body>
+</html>

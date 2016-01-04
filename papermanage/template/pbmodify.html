@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Design by http://sc.chinaz.com
+Released for free under a Creative Commons Attribution 3.0 License
+-->
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>修改论文信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="{% static "style.css" %}" rel="stylesheet" type="text/css"/>
+<!-- CuFon: Enables smooth pretty custom font rendering. 100% SEO friendly. To disable, remove this section -->
+<script type="text/javascript" src="{% static "area.js" %}"></script> 
+
+<!-- CuFon ends -->
+</head>
+<body>
+<div class="main">
+
+   <div class="header">
+    <div class="header_resize">
+     <div class="logo"><h1><a href="/home/">论文<span>管理</span> <small>欢迎进入论文管理系统！</small></a></h1></div>
+      <div class="menu_nav">
+        <ul>
+          <li><a href="/home/">主页</a></li>
+          <li><a href="/reference/">参考论文</a></li>
+          <li><a href="/publish/">发表论文</a></li>
+          {%ifequal a 0 %}<li><a href="/login/">登录&注册</a></li>
+          {%else%} <li><a href="/personal/">{{a}}</a></li> 
+          <li><a href="/loginout/">退出登录</a></li> 
+          {%endifequal%}   
+        </ul>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content_resize">
+      <div class="mainbar">
+        <div class="article">
+          <h2>修改论文信息</h2>
+          <p>请完整填写以下信息<span><a href="register.html"></a></span></p>
+        </div>
+        <div class="article"><div class="clr"></div>
+          <form action="#" method="post" id="sendemail" enctype="multipart/form-data">
+          <ol><li>
+            <label for="Title">论文题目：</label>
+            <input id="Title" name="Title" class="text" value="{{paper.Title}}"/>
+          </li>
+          <li>
+            <label for="Autho1r">第一作者：</label>
+            <input id="Author1" name="Author1" class="text" value="{{paper.Author1}}"/>
+          </li>
+          <li>
+            <label for="Author2">第二作者：</label>
+            <input id="Author2" name="Author2" class="text" value="{{paper.Author2}}"/>
+          </li>
+          <li>
+            <label for="Author3">第三作者：</label>
+            <input id="Author3" name="Author3" class="text" value="{{paper.Author3}}"/>
+          </li>
+          <li>
+            <label for="Author4">第四作者：</label>
+            <input id="Author4" name="Author4" class="text" value="{{paper.Author4}}"/>
+          </li>
+          <li>
+            <label for="PaperID">统一编码：</label>
+            <input id="PaperID" name="PaperID" class="text" value="{{paper.PaperID}}" readonly="readonly"/>
+          </li>
+          <li>
+            <label for="Keyword">关键字：</label>
+            <input id="Keyword" name="Keyword" class="text" value="{{paper.Keyword}}"/>
+          </li>
+          <li>
+            <label for="Summary">摘要：</label>
+            <input id="Summary" name="Summary" class="text" value="{{paper.Summary}}"/>
+          </li>
+          <li>
+            <label for="Publisher">发表刊物：</label>
+            <input id="Publisher" name="Publisher" class="text" value="{{paper.Publisher}}"/>
+          </li>
+          <li>
+            <label for="Publishdate">发表日期：</label>
+            <input id="Publishdate" name="Publishdate" class="text"  required />
+          </li>
+          <li>
+            <label for="classification">选择论文分类：</label>
+            <select id="grade1" runat="server" name="grade1"> 
+			</select>
+            <select id="grade2" runat="server" name="grade2"> 
+            </select> 
+            <select id="grade3" runat="server" name="grade3"> 
+            </select> 
+            
+            <!--js初始化函数--> 
+			<script type="text/javascript"> 
+			setup() 
+			</script>
+          </li>
+          <li>
+            <input type="image" name="imageField" id="imageField" src="{% static "submit.gif" %}" class="send" />
+            <div class="clr"></div>
+          </li></ol>
+          </form>
+        </div>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+
+</div>
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div></body>
+</html>
